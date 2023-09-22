@@ -29,12 +29,17 @@ Fixtures:
 ```
 Serializer:
 ```shell 
-composer require symfony/serializer-pack
+    composer require symfony/serializer-pack
 ```
 Validator (asserts):
 ```shell 
-composer require symfony/validator
+    composer require symfony/validator doctrine/annotations
 ```
+Security:
+```shell 
+    composer require security // and make:user
+```
+
 
 ## Bdd et manipulations de base
 
@@ -58,6 +63,43 @@ Fixtures:
 ```shell 
 php bin/console doctrine:fixtures:load 
 ```
+
+User:
+```shell 
+php bin/console make:user 
+```
+**créer la fonction => getUsername() pour JWT**
+
+```php
+    /**
+     * Méthode getUsername qui permet de retourner le champ qui est utilisé pour l'authentification.
+     *
+     * @return string
+     */
+    public function getUsername(): string {
+        return $this->getUserIdentifier();
+    }
+```
+```shell
+    composer require lexik/jwt-authentication-bundle
+```
+
+## JWT !
+
+Si après avoir installé JWT le dossier jwt n'apparait pas dans config/jwt il faut le créer !
+
+Générer les clés publiques et privées 
+- ouvrir git bash
+- taper la même pass phrase
+- taper la commande clé private
+```bash
+    openssl genpkey -out config/jwt/private.pem -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096
+```
+- taper la commande clé publilque
+```bash
+    openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout
+```
+
 
 ### Contrôleur
 
