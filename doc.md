@@ -31,6 +31,10 @@ Serializer:
 ```shell 
 composer require symfony/serializer-pack
 ```
+Validator (asserts):
+```shell 
+composer require symfony/validator
+```
 
 ## Bdd et manipulations de base
 
