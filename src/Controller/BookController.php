@@ -12,15 +12,56 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use OpenApi\Annotations as OA;
+
 
 class BookController extends AbstractController
 {
 
-     // !! recommandations GET List : code 200 - ok !!   
+     // !! recommandations GET List : code 200 - ok !!  
+         /**
+     * Cette méthode permet de récupérer l'ensemble des livres.
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="Retourne la liste des livres",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=Book::class, groups={"getBooks"}))
+     *     )
+     * )
+     * @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="La page que l'on veut récupérer",
+     *     @OA\Schema(type="int")
+     * )
+     *
+     * @OA\Parameter(
+     *     name="limit",
+     *     in="query",
+     *     description="Le nombre d'éléments que l'on veut récupérer",
+     *     @OA\Schema(type="int")
+     * )
+     * @OA\Tag(name="Books")
+     *
+     * @param BookRepository $bookRepository
+     * @param SerializerInterface $serializer
+     * @param Request $request
+     * @return JsonResponse
+     */
+     
+
+
     #[Route('/api/books', name: 'books', methods:['GET'])]
+    #[IsGranted('ROLE_USER', message: 'Vous n\'avez pas le droit d\'accéder à cette ressource')]
+
     public function getAllBooks(BookRepository $bookRepository, SerializerInterface $serializerInterface): JsonResponse
     {
 
@@ -54,6 +95,7 @@ class BookController extends AbstractController
 
     // !! recommandations DELETE : code 204 - no content !!
     #[Route('/api/books/{id}', name: 'deleteBook', methods:['DELETE'])]
+    #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas le droit d\'accéder à cette ressource')]
     public function deleteOneBook(Book $book, EntityManagerInterface $em): JsonResponse
     {
         $em->remove($book);
@@ -63,6 +105,7 @@ class BookController extends AbstractController
 
     // !! recommandations POST : code 201 - created. Retourner le post nouvellement créer !!
     #[Route('/api/books', name: 'createBook', methods:['POST'])]
+    #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas le droit d\'accéder à cette ressource')]
     public function createOneBook(Request $request,
                                     AuthorRepository $authorepository, 
                                     SerializerInterface $serializer, 
@@ -77,9 +120,6 @@ class BookController extends AbstractController
             return new JsonResponse($serializer->serialize($errors, 'json'), JsonResponse::HTTP_BAD_REQUEST, [], true);
         }
 
-
-        
-        
         // on va mettre a jour l'auteur
         $content = $request->toArray();
         $author = $authorepository->find($content['idAuthor']);
@@ -101,6 +141,7 @@ class BookController extends AbstractController
 
     // !! recommandations PUT : réponse vide avec un  204 - No content . Cela signifie que l’opération s’est bien passée !!
     #[Route('/api/books/{id}', name: 'updateBook', methods:['PUT'])]
+    #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas le droit d\'accéder à cette ressource')]
     public function updateOneBook(Book $currentBook, Request $request, AuthorRepository $authorepository, EntityManagerInterface $em, SerializerInterface $serializer): JsonResponse
     {
 

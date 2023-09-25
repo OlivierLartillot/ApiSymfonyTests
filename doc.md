@@ -39,7 +39,14 @@ Security:
 ```shell 
     composer require security // and make:user
 ```
-
+Documentation api:
+```shell
+    composer require nelmio/api-doc-bundle
+```
+Si besoind d'une belle documentation pour nelmio
+```shell
+    composer require twig asset
+```
 
 ## Bdd et manipulations de base
 
@@ -83,8 +90,8 @@ php bin/console make:user
 ```shell
     composer require lexik/jwt-authentication-bundle
 ```
+**VOIR LE FICHIER JWT.MD**
 
-## JWT !
 
 Si après avoir installé JWT le dossier jwt n'apparait pas dans config/jwt il faut le créer !
 
