@@ -22,6 +22,12 @@ class StarWarsPeople
     #[Groups(["StarWarsOnePeople"])]
     private ?bool $gender = null;
 
+    #[ORM\Column]
+    private ?int $peopleIdDist = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $planet = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -47,6 +53,30 @@ class StarWarsPeople
     public function setGender(?bool $gender): static
     {
         $this->gender = $gender;
+
+        return $this;
+    }
+
+    public function getPeopleIdDist(): ?int
+    {
+        return $this->peopleIdDist;
+    }
+
+    public function setPeopleIdDist(int $peopleIdDist): static
+    {
+        $this->peopleIdDist = $peopleIdDist;
+
+        return $this;
+    }
+
+    public function getPlanet(): ?string
+    {
+        return $this->planet;
+    }
+
+    public function setPlanet(?string $planet): static
+    {
+        $this->planet = $planet;
 
         return $this;
     }
