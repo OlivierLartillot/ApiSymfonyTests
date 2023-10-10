@@ -21,14 +21,12 @@ class AuthorController extends AbstractController
         return new JsonResponse($authorsJson,200,[], true);
     }
 
-    #[Route('api/authors/{id}', name: 'authors', methods:['GET'])]
+    #[Route('api/authors/{id}', name: 'authors_id', methods:['GET'])]
     public function getOneAuthor(Author $author, SerializerInterface $serializer): JsonResponse
     {
 
         $authorJson = $serializer->serialize($author, 'json', ['groups' => 'getAuthors']);
         return new JsonResponse($authorJson,200,[], true);
     }
-
-
 
 }
